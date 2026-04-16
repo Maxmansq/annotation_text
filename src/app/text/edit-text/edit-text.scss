@@ -1,0 +1,69 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header-wrapper {
+  padding: 10px;
+}
+
+.edit-wrapper {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+  padding: 10px;
+  background: white;
+}
+
+.input-title {
+  border: 1px solid #000000;
+  padding-left: 10px;
+  height: 30px;
+  width: 400px;
+}
+
+.content-wrapper {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  width: 100%;
+}
+
+.input-content {
+  all: unset;
+  border: 1px solid #000000;
+  padding: 10px;
+  height: 200px;
+  width: 1000px;
+}
+
+.save-btn {
+  background: green;
+}
+
+.edit-work {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  width: max-content;
+  height: 30px;
+  border: 2px solid blue;
+  border-radius: 5px;
+  gap: 10px;
+}
+
+.textarea-wrapper {
+  position: relative;
+}
+
+.exit-btn svg {
+  margin-top: 3px;
+  width: 14px;
+  height: 14px;
+  color: black;
+
+
+  &:hover {
+    color: red;
+  }
+}

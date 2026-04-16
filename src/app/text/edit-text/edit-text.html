@@ -1,0 +1,27 @@
+<header class="header-wrapper">
+  <h2>Edit Text Entry</h2>
+</header>
+@if (idEditFile()) {
+  <div class="edit-work mt16">
+    <p>Edit file ID:{{editForm.controls.id.value}} Title:{{editForm.controls.title.value}}</p>
+    <button class="exit-btn" (click)="onExitEditText()" )>
+      <svg id="cross" width="16px" height="16px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 14.545L1.455 16 8 9.455 14.545 16 16 14.545 9.455 8 16 1.455 14.545 0 8 6.545 1.455 0 0 1.455 6.545 8z" fill="currentColor"/>
+      </svg>
+    </button>
+
+  </div>
+
+}
+<form class="edit-wrapper mt8" [formGroup]="editForm" ]>
+    <p>Title:</p>
+    <input class="input-title" formControlName="title">
+    <p>Content:</p>
+    <div class="textarea-wrapper" tooltip>
+      <textarea tooltip class="input-content" formControlName="content"></textarea>
+    </div>
+
+</form>
+<div>
+  <button (click)="onSaveText()" class="save-btn btn mt8">Save</button>
+</div>
