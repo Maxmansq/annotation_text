@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="../../../layout/layout.scss">
+<div
+  #contentEdit
+  contenteditable="true"
+  class="input-content"
+  (input)="handleInput($event)" )>
+</div>
+<div (mouseup)="$event.stopPropagation()">
+  <ng-container #tooltip></ng-container>
+</div>

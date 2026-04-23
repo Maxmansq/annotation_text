@@ -18,4 +18,9 @@ export class TextEntries {
     if (!id) return
     this.#textServices.editText(id)
   };
+
+  onDelete(id: number) {
+    if(!id) return
+    this.#textServices.deleteText(id)
+  }
 }

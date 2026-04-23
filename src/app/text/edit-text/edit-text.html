@@ -1,3 +1,4 @@
+<script src="edit-text.ts"></script>
 <header class="header-wrapper">
   <h2>Edit Text Entry</h2>
 </header>
@@ -17,11 +18,13 @@
     <p>Title:</p>
     <input class="input-title" formControlName="title">
     <p>Content:</p>
-    <div class="textarea-wrapper" tooltip>
-      <textarea tooltip class="input-content" formControlName="content"></textarea>
+    <div class="textarea-wrapper">
+      <app-input-edit-text-control #inputControl formControlName="content">
+      </app-input-edit-text-control>
     </div>
-
 </form>
 <div>
   <button (click)="onSaveText()" class="save-btn btn mt8">Save</button>
 </div>
+
+

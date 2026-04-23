@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TextEntries } from '../text/text-entries/text-entries';
 import { EditText } from '../text/edit-text/edit-text';
+import { TooltipText } from '../common-UI/tooltip-text/tooltip-text';
 
 @Component({
   selector: 'app-layout',

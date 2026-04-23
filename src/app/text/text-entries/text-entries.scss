@@ -39,8 +39,10 @@
 }
 
 .mat-column-text {
-  width: 600px;
   border-right: 1px solid black;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  overflow-y: auto;
 }
 
 .mat-column-action {

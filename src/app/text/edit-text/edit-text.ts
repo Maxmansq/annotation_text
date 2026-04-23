@@ -1,27 +1,35 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component, ElementRef,
+  inject,
+  OnInit,
+  signal, viewChild,
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TextService } from '../service/textService';
-import { CreateTextDto } from '../interfaces/text-interfaces';
-import { SvgIcon } from '../../common-UI/component/svg-icon/svg-icon';
-import { TooltipDirective } from '../../common-UI/directives/tooltip.directive';
+import { ControlText, CreateTextDto } from '../interfaces/text-interfaces';
+import { InputEditTextControl } from '../../common-UI/component/input-edit-text-control/input-edit-text-control';
 
 @Component({
   selector: 'app-edit-text',
-  imports: [ReactiveFormsModule, SvgIcon, TooltipDirective],
+  imports: [ReactiveFormsModule, InputEditTextControl],
   templateUrl: './edit-text.html',
   styleUrl: './edit-text.scss',
 })
 export class EditText implements OnInit {
+  #textServices = inject(TextService);
+  idEditFile = signal<number | null>(null);
+  inputControl = viewChild('inputControl', {read: ElementRef});
+
   editForm = new FormGroup({
     id: new FormControl<number>(0),
     title: new FormControl('', { nonNullable: true }),
-    content: new FormControl('', { nonNullable: true }),
+    content: new FormControl<ControlText>({text: '', template: ''}, { nonNullable: true }),
   });
-  #textServices = inject(TextService);
-
-  idEditFile = signal<number | null>(null);
 
   ngOnInit() {
+    this.editForm.valueChanges.subscribe((text) => {
+      console.log(text);
+    })
     this.#textServices.edit.subscribe((editText) => {
       this.idEditFile.set(editText.id);
       this.editForm.setValue({
@@ -45,7 +53,14 @@ export class EditText implements OnInit {
       content: this.editForm.controls.content.value,
     };
     this.#textServices.addText(createText);
-    this.editForm.reset();
+    this.editForm.setValue({
+      id: null,
+      title: '',
+      content: {
+        text: '',
+        template: ''
+      }
+    });
     this.idEditFile.set(null);
   }
 }
