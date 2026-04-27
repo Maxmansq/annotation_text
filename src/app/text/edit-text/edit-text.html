@@ -10,18 +10,26 @@
         <path d="M0 14.545L1.455 16 8 9.455 14.545 16 16 14.545 9.455 8 16 1.455 14.545 0 8 6.545 1.455 0 0 1.455 6.545 8z" fill="currentColor"/>
       </svg>
     </button>
-
   </div>
-
 }
 <form class="edit-wrapper mt8" [formGroup]="editForm" ]>
     <p>Title:</p>
-    <input class="input-title" formControlName="title">
+    <label class="title-wrapper">
+      <input class="input-title" formControlName="title">
+      @if (this.editForm.controls.title.touched &&
+      this.editForm.controls.title.hasError('required')) {
+        <span class="validators-error">Заполнить поле</span>
+      }
+    </label>
     <p>Content:</p>
-    <div class="textarea-wrapper">
+    <label class="textarea-wrapper">
       <app-input-edit-text-control #inputControl formControlName="content">
       </app-input-edit-text-control>
-    </div>
+      @if (this.editForm.controls.content.touched &&
+      this.editForm.controls.content.hasError('error')) {
+        <span class="validators-error">Напишите текст</span>
+      }
+    </label>
 </form>
 <div>
   <button (click)="onSaveText()" class="save-btn btn mt8">Save</button>

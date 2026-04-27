@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { TextService } from '../service/textService';
+import { TextService } from '../../data-access/text-formater/service/textService';
 
 @Component({
   selector: 'app-text-entries',

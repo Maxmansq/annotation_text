@@ -4,10 +4,11 @@ import {
   OnInit,
   signal, viewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TextService } from '../service/textService';
-import { ControlText, CreateTextDto } from '../interfaces/text-interfaces';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TextService } from '../../data-access/text-formater/service/textService';
+import { ControlText, CreateTextDto } from '../../data-access/text-formater/interfaces/text-interfaces';
 import { InputEditTextControl } from '../../common-UI/component/input-edit-text-control/input-edit-text-control';
+import { contentRequired } from '../../data-access/text-formater/validators/required-content';
 
 @Component({
   selector: 'app-edit-text',
@@ -18,18 +19,17 @@ import { InputEditTextControl } from '../../common-UI/component/input-edit-text-
 export class EditText implements OnInit {
   #textServices = inject(TextService);
   idEditFile = signal<number | null>(null);
-  inputControl = viewChild('inputControl', {read: ElementRef});
+  inputControl = viewChild('inputControl', { read: ElementRef });
 
   editForm = new FormGroup({
     id: new FormControl<number>(0),
-    title: new FormControl('', { nonNullable: true }),
-    content: new FormControl<ControlText>({text: '', template: ''}, { nonNullable: true }),
+    title: new FormControl('', Validators.required),
+    content: new FormControl<ControlText>({ text: '', template: '' }, contentRequired),
   });
 
   ngOnInit() {
     this.editForm.valueChanges.subscribe((text) => {
-      console.log(text);
-    })
+    });
     this.#textServices.edit.subscribe((editText) => {
       this.idEditFile.set(editText.id);
       this.editForm.setValue({
@@ -42,15 +42,17 @@ export class EditText implements OnInit {
 
   onExitEditText() {
     this.idEditFile.set(null);
-    this.idEditFile.set(null);
     this.editForm.reset();
   }
 
   onSaveText() {
+    this.editForm.markAllAsTouched();
+    this.editForm.updateValueAndValidity();
+    if (!this.editForm.valid) return;
     const createText: CreateTextDto = {
       id: this.idEditFile(),
-      title: this.editForm.controls.title.value,
-      content: this.editForm.controls.content.value,
+      title: this.editForm.controls.title.value ?? '',
+      content: this.editForm.controls.content.value ?? { text: '', template: '' },
     };
     this.#textServices.addText(createText);
     this.editForm.setValue({
@@ -58,8 +60,8 @@ export class EditText implements OnInit {
       title: '',
       content: {
         text: '',
-        template: ''
-      }
+        template: '',
+      },
     });
     this.idEditFile.set(null);
   }

@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { CreateTextDto, EditText, TextInterface } from '../interfaces/text-interfaces';
-import { Observable, Subject } from 'rxjs';
+import { CreateTextDto, TextInterface } from '../interfaces/text-interfaces';
+import { Subject } from 'rxjs';
 
 
 @Injectable({

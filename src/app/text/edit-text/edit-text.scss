@@ -65,3 +65,12 @@
   width: 100px;
   height: 100px;
 }
+
+.title-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.validators-error {
+  color: red;
+}

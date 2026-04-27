@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TooltipText } from '../../tooltip-text/tooltip-text';
-import { ControlText } from '../../../text/interfaces/text-interfaces';
+import { ControlText } from '../../../data-access/text-formater/interfaces/text-interfaces';
 
 @Component({
   selector: 'app-input-edit-text-control',
@@ -45,48 +45,11 @@ export class InputEditTextControl implements ControlValueAccessor {
     }
 
     this.containerRef = this.tooltip()?.createComponent(TooltipText) ?? null;
+
     this.containerRef?.instance.colorFill.subscribe((color) => {
-      // получаем выделенное
-      const range = selection?.getRangeAt(0);
-      const selText = selection?.toString();
-
-      // создаем span
-      const colorSpan = this.#r2.createElement('span');
-      this.#r2.setStyle(colorSpan, 'background', color);
-      this.#r2.appendChild(colorSpan, this.#r2.createText(selText));
-
-      // удаляем выделение
-      range?.deleteContents();
-
-      // вставляем всё по порядку
-      const spaceBefore = document.createTextNode('$');
-      const spaceAfter = document.createTextNode('$');
-      range?.insertNode(spaceAfter);
-      range?.insertNode(colorSpan);
-      range?.insertNode(spaceBefore);
-
-      // ставим курсор после всего блока
-      const newRange = document.createRange();
-      const sel = window.getSelection();
-
-      newRange.setStartAfter(spaceAfter);
-      newRange.collapse(true);
-
-      sel?.removeAllRanges();
-      sel?.addRange(newRange);
-
-      const inputEl = this.inputContent()?.nativeElement;
-
-      if (inputEl) {
-        const inputText: ControlText = {
-          text: inputEl.innerText,
-          template: inputEl.innerHTML,
-        };
-
-        this.onChange(inputText);
-        this.onTouched();
-      }
+      this.colorChange(color, selection);
     });
+
     if (!this.containerRef) return;
 
     this.containerRef.setInput('coordinates', [event.clientX, event.clientY]);
@@ -109,8 +72,7 @@ export class InputEditTextControl implements ControlValueAccessor {
   writeValue(text: ControlText): void {
     const inputElement = this.inputContent();
     if (!inputElement) return;
-    console.log(text)
-    inputElement.nativeElement.innerHTML = text.template
+    inputElement.nativeElement.innerHTML = text ? text.template : '';
   }
 
   registerOnChange(fn: any): void {
@@ -127,5 +89,50 @@ export class InputEditTextControl implements ControlValueAccessor {
       template: event.target.innerHTML,
     };
     this.onChange(inputText);
+  }
+
+  colorChange(color: string, selection: Selection): void {
+    // получаем выделенное
+    const range = selection?.getRangeAt(0);
+    const selText = selection?.toString();
+
+    // создаем span
+    const colorSpan = this.#r2.createElement('span');
+    this.#r2.setStyle(colorSpan, 'background', color);
+    this.#r2.appendChild(colorSpan, this.#r2.createText(selText));
+
+    const caretSpan = document.createElement('span');
+    caretSpan.setAttribute('data-caret', 'true');
+    caretSpan.innerHTML = '&#8203;'; // zero width внутри
+
+    range.deleteContents();
+
+    range.insertNode(caretSpan);
+    range.insertNode(colorSpan);
+
+    // ставим курсор после всего блока
+    const newRange = document.createRange();
+    const sel = window.getSelection();
+
+    newRange.setStart(caretSpan.firstChild!, 1);
+    newRange.collapse(true);
+
+    sel?.removeAllRanges();
+    sel?.addRange(newRange);
+
+    const inputEl = this.inputContent()?.nativeElement;
+
+    if (inputEl) {
+      const inputText: ControlText = {
+        text: inputEl.innerText,
+        template: inputEl.innerHTML,
+      };
+
+      this.onChange(inputText);
+    }
+  }
+
+  onBlur() {
+    this.onTouched();
   }
 }
